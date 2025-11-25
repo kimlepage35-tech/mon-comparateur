@@ -1,10 +1,850 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Mon comparateur</title>
+  <meta charset="UTF-8" />
+  <title>Mon comparateur de courses</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg-body: #0f172a;
+      --bg-card: #ffffff;
+      --primary: #22c55e;
+      --primary-dark: #16a34a;
+      --border-soft: #e5e7eb;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --chip-bg: #f3f4f6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .app-header {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      color: #e5e7eb;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .logo-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 25% 25%, #bbf7d0 0, #22c55e 45%, #14532d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #022c22;
+      font-size: 0.9rem;
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.35);
+    }
+
+    .brand-title {
+      font-weight: 600;
+    }
+
+    .brand-sub {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    .chip {
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      font-size: 0.7rem;
+      color: #e5e7eb;
+      white-space: nowrap;
+    }
+
+    .app-card {
+      background: var(--bg-card);
+      border-radius: 1.25rem;
+      padding: 1.2rem 1.4rem 1.4rem;
+      box-shadow:
+        0 18px 45px rgba(15, 23, 42, 0.38),
+        0 0 0 1px rgba(148, 163, 184, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .card-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.25rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: var(--chip-bg);
+      color: var(--text-muted);
+      border: 1px solid #e5e7eb;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.35rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 180px;
+      min-width: 160px;
+      font-size: 0.8rem;
+    }
+
+    .control-group label {
+      margin-bottom: 0.25rem;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .control-group input,
+    .control-group select {
+      padding: 0.35rem 0.55rem;
+      border-radius: 0.6rem;
+      border: 1px solid var(--border-soft);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+      background: #f9fafb;
+    }
+
+    .control-group input:focus,
+    .control-group select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.35);
+      background: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.4rem;
+      font-size: 0.9rem;
+      border-radius: 0.9rem;
+      overflow: hidden;
+      border: 1px solid #e5e7eb;
+    }
+
+    thead {
+      background: #f3f4f6;
+    }
+
+    th, td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0.55rem 0.55rem;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .product-name {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .best-price {
+      background: #ecfdf3;
+    }
+
+    .badge-best {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid var(--primary-dark);
+      color: var(--primary-dark);
+      margin-left: 0.35rem;
+      background: #dcfce7;
+    }
+
+    .product-image {
+      width: 44px;
+      height: 44px;
+      object-fit: cover;
+      border-radius: 0.9rem;
+      border: 1px solid #e5e7eb;
+      background: #f3f4f6;
+    }
+
+    .price-cell {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cart-section {
+      margin-top: 1rem;
+      padding: 0.8rem 0.7rem 0.7rem;
+      border-radius: 0.9rem;
+      background: #f9fafb;
+      border: 1px dashed #e5e7eb;
+      font-size: 0.85rem;
+    }
+
+    .cart-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .cart-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .cart-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin: 0.15rem 0 0.35rem;
+    }
+
+    .cart-content h3 {
+      font-size: 0.85rem;
+      margin: 0.3rem 0 0.1rem;
+    }
+
+    .cart-content div {
+      font-size: 0.8rem;
+      color: #374151;
+    }
+
+    .copy-button {
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid var(--primary);
+      background: #ecfdf3;
+      color: var(--primary-dark);
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .copy-button:hover {
+      background: #bbf7d0;
+    }
+
+    .add-form {
+      margin-top: 1rem;
+      padding-top: 0.8rem;
+      border-top: 1px dashed #e5e7eb;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .add-form h2 {
+      font-size: 0.95rem;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .add-form h2 span {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .add-form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .add-form-group {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 150px;
+      min-width: 150px;
+    }
+
+    .add-form-group label {
+      margin-bottom: 0.25rem;
+      color: var(--text-main);
+    }
+
+    .add-form-group input {
+      padding: 0.35rem 0.55rem;
+      border-radius: 0.6rem;
+      border: 1px solid var(--border-soft);
+      font-size: 0.85rem;
+      outline: none;
+      background: #f9fafb;
+    }
+
+    .add-form-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.35);
+      background: #ffffff;
+    }
+
+    .add-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .add-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0.1rem;
+    }
+
+    .add-form button {
+      padding: 0.42rem 1rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: 0 10px 20px rgba(34, 197, 94, 0.25);
+      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.15s;
+    }
+
+    .add-form button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(34, 197, 94, 0.32);
+    }
+
+    .add-form button:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 16px rgba(34, 197, 94, 0.25);
+    }
+
+    .button-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,0.7);
+      display: inline-block;
+      position: relative;
+    }
+
+    .button-dot::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.9);
+    }
+
+    .footer-info {
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      color: #9ca3af;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 0.9rem 0.5rem;
+      }
+
+      .app-card {
+        padding: 1rem 0.9rem 1.1rem;
+        border-radius: 1rem;
+      }
+
+      th, td {
+        padding: 0.45rem 0.35rem;
+      }
+
+      .app-header {
+        border-radius: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>Bienvenue sur mon comparateur</h1>
-    <p>Site en construction...</p>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-circle">€</div>
+        <div>
+          <div class="brand-title">Comparateur de courses</div>
+          <div class="brand-sub">Ton outil perso pour payer moins cher</div>
+        </div>
+      </div>
+      <div class="chip">Prototype local · 100% privé</div>
+    </header>
+
+    <main class="app-card">
+      <div class="card-header">
+        <div>
+          <h1>Mes produits du moment</h1>
+          <p class="subtitle">Recherche, filtre par magasin, tri par prix et sélection dans le panier.</p>
+          <div class="tag-row">
+            <span class="tag">Courses</span>
+            <span class="tag">Comparateur perso</span>
+            <span class="tag">Liste de courses</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="controls" aria-label="Filtres et tri">
+        <div class="control-group">
+          <label for="search-input">Rechercher un produit</label>
+          <input id="search-input" type="text" placeholder="ex : pâtes, lait, pommes..." />
+        </div>
+
+        <div class="control-group">
+          <label for="store-filter">Filtrer par magasin</label>
+          <select id="store-filter">
+            <option value="all">Tous les magasins</option>
+            <option value="Chez Clochet">Chez Clochet</option>
+            <option value="Super U Dagort">Super U Dagort</option>
+            <option value="Chez Julien">Chez Julien</option>
+            <option value="Claude Gautier">Claude Gautier</option>
+            <option value="Chez L'tournel">Chez L'tournel</option>
+            <option value="Poissonnerie Paturel">Poissonnerie Paturel</option>
+            <option value="Chez Bernie">Chez Bernie</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="sort-select">Trier par prix (min)</label>
+          <select id="sort-select">
+            <option value="none">Sans tri</option>
+            <option value="asc">Du moins cher au plus cher</option>
+            <option value="desc">Du plus cher au moins cher</option>
+          </select>
+        </div>
+      </section>
+
+      <section aria-label="Tableau comparatif">
+        <table id="price-table">
+          <thead>
+            <tr>
+              <th>Panier</th>
+              <th>Photo</th>
+              <th>Produit</th>
+              <th>Magasin</th>
+              <th>Prix (€)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rempli en JavaScript -->
+          </tbody>
+        </table>
+      </section>
+
+      <section class="cart-section" aria-label="Liste de courses">
+        <div class="cart-header-row">
+          <div>
+            <div class="cart-title">Ma liste de courses</div>
+            <p class="cart-hint">
+              Coche les lignes dans le tableau pour ajouter au panier. Les magasins sont affichés par ordre alphabétique.
+            </p>
+          </div>
+          <button type="button" id="copy-cart" class="copy-button">
+            📋 Copier la liste
+          </button>
+        </div>
+        <div id="cart-content" class="cart-content">
+          Aucun article sélectionné.
+        </div>
+      </section>
+
+      <form id="add-form" class="add-form">
+        <h2>
+          Ajouter un produit
+          <span>(reste dans ta page, rien n’est envoyé sur Internet)</span>
+        </h2>
+
+        <div class="add-form-row">
+          <div class="add-form-group">
+            <label for="add-name">Nom du produit</label>
+            <input id="add-name" type="text" placeholder="ex : Riz 1 kg" />
+          </div>
+          <div class="add-form-group">
+            <label for="add-store">Magasin</label>
+            <input id="add-store" type="text" placeholder="ex : Supermarché A" />
+          </div>
+          <div class="add-form-group">
+            <label for="add-price">Prix (€)</label>
+            <input id="add-price" type="text" placeholder="ex : 2,35" />
+            <div class="add-hint">Tu peux écrire 2,35 ou 2.35</div>
+          </div>
+        </div>
+
+        <div class="add-form-row">
+          <div class="add-form-group">
+            <label for="add-image">Photo du produit</label>
+            <input id="add-image" type="file" accept="image/*" />
+            <div class="add-hint">Image stockée localement, uniquement sur ton appareil.</div>
+          </div>
+        </div>
+
+        <div class="add-actions">
+          <button type="submit">
+            <span class="button-dot"></span>
+            Ajouter au comparateur
+          </button>
+        </div>
+      </form>
+
+      <div class="footer-info">
+        Prototype local – Ta liste de courses est créée à partir des cases cochées.  
+        Tu peux la copier pour la garder ailleurs (notes, WhatsApp, etc.).
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const data = [
+      {
+        produit: "Pâtes 500 g",
+        image: "https://via.placeholder.com/60?text=Pates",
+        prix: [
+          { magasin: "Supermarché A", prix: 1.20 },
+          { magasin: "Supermarché B", prix: 1.05 },
+          { magasin: "Supermarché C", prix: 1.35 }
+        ]
+      },
+      {
+        produit: "Lait 1 L",
+        image: "https://via.placeholder.com/60?text=Lait",
+        prix: [
+          { magasin: "Supermarché A", prix: 1.10 },
+          { magasin: "Supermarché B", prix: 1.09 },
+          { magasin: "Supermarché C", prix: 1.25 }
+        ]
+      },
+      {
+        produit: "Pommes (1 kg)",
+        image: "https://via.placeholder.com/60?text=Pommes",
+        prix: [
+          { magasin: "Supermarché A", prix: 2.30 },
+          { magasin: "Supermarché B", prix: 2.10 },
+          { magasin: "Supermarché C", prix: 2.45 }
+        ]
+      }
+    ];
+
+    let currentSearch = "";
+    let currentStore = "all";
+    let currentSort = "none";
+    let lastCartItems = [];
+
+    function updateCartSummary() {
+      const checked = document.querySelectorAll(".row-select:checked");
+      const items = [];
+
+      checked.forEach((cb) => {
+        items.push({
+          produit: cb.dataset.product,
+          magasin: cb.dataset.store,
+          prix: parseFloat(cb.dataset.price)
+        });
+      });
+
+      items.sort((a, b) => {
+        const storeCompare = a.magasin.localeCompare(b.magasin, "fr");
+        if (storeCompare !== 0) return storeCompare;
+        return a.produit.localeCompare(b.produit, "fr");
+      });
+
+      lastCartItems = items;
+
+      const container = document.getElementById("cart-content");
+      container.innerHTML = "";
+
+      if (items.length === 0) {
+        container.textContent = "Aucun article sélectionné.";
+        return;
+      }
+
+      let currentMagasin = null;
+
+      items.forEach((item) => {
+        if (item.magasin !== currentMagasin) {
+          currentMagasin = item.magasin;
+          const h3 = document.createElement("h3");
+          h3.textContent = currentMagasin;
+          container.appendChild(h3);
+        }
+        const line = document.createElement("div");
+        line.textContent =
+          "• " + item.produit + " – " +
+          item.prix.toFixed(2).replace(".", ",") + " €";
+        container.appendChild(line);
+      });
+    }
+
+    function renderTable() {
+      const tbody = document.querySelector("#price-table tbody");
+      tbody.innerHTML = "";
+
+      let items = data.map((item) => {
+        const minPrice = Math.min(...item.prix.map((p) => p.prix));
+        return { ...item, minPrice };
+      });
+
+      const searchValue = currentSearch.trim().toLowerCase();
+      if (searchValue !== "") {
+        items = items.filter((item) =>
+          item.produit.toLowerCase().includes(searchValue)
+        );
+      }
+
+      if (currentSort === "asc") {
+        items.sort((a, b) => a.minPrice - b.minPrice);
+      } else if (currentSort === "desc") {
+        items.sort((a, b) => b.minPrice - a.minPrice);
+      }
+
+      items.forEach((item) => {
+        const filteredPrices = item.prix.filter((p) => {
+          if (currentStore === "all") return true;
+          return p.magasin === currentStore;
+        });
+
+        if (filteredPrices.length === 0) return;
+
+        filteredPrices.forEach((prixMagasin, index) => {
+          const tr = document.createElement("tr");
+
+          // Colonne sélection (panier)
+          const tdSelect = document.createElement("td");
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.classList.add("row-select");
+          checkbox.dataset.product = item.produit;
+          checkbox.dataset.store = prixMagasin.magasin;
+          checkbox.dataset.price = prixMagasin.prix.toString();
+          checkbox.addEventListener("change", updateCartSummary);
+          tdSelect.appendChild(checkbox);
+          tr.appendChild(tdSelect);
+
+          // Colonne photo
+          const tdPhoto = document.createElement("td");
+          if (index === 0 && item.image) {
+            const img = document.createElement("img");
+            img.src = item.image;
+            img.alt = item.produit;
+            img.classList.add("product-image");
+            tdPhoto.appendChild(img);
+          }
+          tr.appendChild(tdPhoto);
+
+          // Colonne produit
+          const tdProduit = document.createElement("td");
+          if (index === 0) {
+            tdProduit.textContent = item.produit;
+            tdProduit.classList.add("product-name");
+          } else {
+            tdProduit.textContent = "";
+          }
+
+          // Colonne magasin
+          const tdMagasin = document.createElement("td");
+          tdMagasin.textContent = prixMagasin.magasin;
+
+          // Colonne prix
+          const tdPrix = document.createElement("td");
+          tdPrix.textContent = prixMagasin.prix.toFixed(2).replace(".", ",");
+          tdPrix.classList.add("price-cell");
+
+          if (prixMagasin.prix === item.minPrice) {
+            tr.classList.add("best-price");
+
+            const badge = document.createElement("span");
+            badge.classList.add("badge-best");
+            badge.textContent = "Moins cher";
+            tdMagasin.appendChild(badge);
+          }
+
+          tr.appendChild(tdProduit);
+          tr.appendChild(tdMagasin);
+          tr.appendChild(tdPrix);
+
+          tbody.appendChild(tr);
+        });
+      });
+
+      // Quand on rerend le tableau, on vide le panier visuel (checkboxes réinitialisées)
+      updateCartSummary();
+    }
+
+    const searchInput = document.getElementById("search-input");
+    const storeFilter = document.getElementById("store-filter");
+    const sortSelect = document.getElementById("sort-select");
+
+    searchInput.addEventListener("input", (event) => {
+      currentSearch = event.target.value;
+      renderTable();
+    });
+
+    storeFilter.addEventListener("change", (event) => {
+      currentStore = event.target.value;
+      renderTable();
+    });
+
+    sortSelect.addEventListener("change", (event) => {
+      currentSort = event.target.value;
+      renderTable();
+    });
+
+    const addForm = document.getElementById("add-form");
+    const addName = document.getElementById("add-name");
+    const addStore = document.getElementById("add-store");
+    const addPrice = document.getElementById("add-price");
+    const addImage = document.getElementById("add-image");
+
+    addForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const name = addName.value.trim();
+      const store = addStore.value.trim();
+      const priceText = addPrice.value.trim().replace(",", ".");
+      const price = parseFloat(priceText);
+      const file = addImage.files[0];
+
+      if (!name || !store || isNaN(price)) {
+        alert("Remplis au moins le nom, le magasin et un prix valide 🙂");
+        return;
+      }
+
+      let imageUrl = "";
+      if (file) {
+        imageUrl = URL.createObjectURL(file);
+      }
+
+      const newProduct = {
+        produit: name,
+        image: imageUrl,
+        prix: [
+          { magasin: store, prix: price }
+        ]
+      };
+
+      data.push(newProduct);
+      addForm.reset();
+      renderTable();
+    });
+
+    const copyCartButton = document.getElementById("copy-cart");
+    copyCartButton.addEventListener("click", () => {
+      if (!lastCartItems.length) {
+        alert("Aucun article sélectionné dans le panier.");
+        return;
+      }
+
+      const lines = [];
+      let currentMagasin = null;
+
+      lastCartItems.forEach((item) => {
+        if (item.magasin !== currentMagasin) {
+          currentMagasin = item.magasin;
+          lines.push(currentMagasin.toUpperCase());
+        }
+        lines.push(
+          "- " +
+            item.produit +
+            " : " +
+            item.prix.toFixed(2).replace(".", ",") +
+            " €"
+        );
+      });
+
+      const text = lines.join("\n");
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(text)
+          .then(() => {
+            alert("Liste copiée dans le presse-papiers ✅");
+          })
+          .catch(() => {
+            alert("Voici ta liste, tu peux la copier :\n\n" + text);
+          });
+      } else {
+        alert("Voici ta liste, tu peux la copier :\n\n" + text);
+      }
+    });
+
+    renderTable();
+  </script>
 </body>
 </html>

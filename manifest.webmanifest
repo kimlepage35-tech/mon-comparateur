@@ -1,0 +1,10 @@
+{
+  "name": "Comparateur de courses",
+  "short_name": "Courses",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "description": "Comparateur de courses perso avec profils et carte des magasins.",
+  "lang": "fr"
+}

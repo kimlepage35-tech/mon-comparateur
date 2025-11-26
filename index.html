@@ -1509,5 +1509,15 @@
     renderProfilesList();
     // On laisse l'écran de profils visible au démarrage
   </script>
+
+  </script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch((err) => {
+        console.error("Erreur service worker :", err);
+      });
+    });
+  }
+  </script>
 </body>
 </html>

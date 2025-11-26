@@ -721,6 +721,25 @@
           </div>
         </div>
       </div>
+      <!-- Barre d’actions principale -->
+      <section class="controls" aria-label="Actions rapides">
+        <div class="control-group" style="flex: 1 1 100%">
+          <button type="button" id="btn-go-add" style="width: 100%; padding: 0.55rem 0.8rem; border-radius: 999px; border: none; background: #22c55e; color: white; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-bottom: 0.4rem;">
+            ➕ Ajouter un produit
+          </button>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" id="btn-go-table" style="flex: 1 1 140px; padding: 0.45rem 0.7rem; border-radius: 999px; border: 1px solid #e5e7eb; background: #f9fafb; font-size: 0.82rem; cursor: pointer;">
+              📋 Tableau des prix
+            </button>
+            <button type="button" id="btn-go-map" style="flex: 1 1 140px; padding: 0.45rem 0.7rem; border-radius: 999px; border: 1px solid #e5e7eb; background: #f9fafb; font-size: 0.82rem; cursor: pointer;">
+              📍 Carte des magasins
+            </button>
+            <button type="button" id="btn-go-cart" style="flex: 1 1 140px; padding: 0.45rem 0.7rem; border-radius: 999px; border: 1px solid #e5e7eb; background: #f9fafb; font-size: 0.82rem; cursor: pointer;">
+              🛒 Liste de courses
+            </button>
+          </div>
+        </div>
+      </section>
 
       <section class="controls" aria-label="Filtres et tri">
         <div class="control-group">
@@ -1099,8 +1118,8 @@
         tile.className = "profile-tile";
 
         const avatar = document.createElement("div");
-        const avatarClass = "avatar-" + ((profile.avatarIndex || ((index % 5) + 1)));
-        avatar.className = "profile-avatar " + avatarClass;
+        const avatarClass = "profile-avatar " + "avatar-" + ((profile.avatarIndex || ((index % 5) + 1)));
+        avatar.className = avatarClass;
 
         if (profile.avatarImage) {
           const img = document.createElement("img");
@@ -1111,21 +1130,18 @@
           avatar.textContent = profile.name.trim()[0]?.toUpperCase() || "?";
         }
 
+        // Clic sur la photo = changer l'icône
+        avatar.addEventListener("click", (e) => {
+          e.stopPropagation();
+          handleChangeProfileAvatar(profile);
+        });
+
         const name = document.createElement("div");
         name.className = "profile-name";
         name.textContent = profile.name;
 
         const actions = document.createElement("div");
         actions.className = "profile-actions";
-
-        const editBtn = document.createElement("button");
-        editBtn.type = "button";
-        editBtn.className = "profile-action-btn";
-        editBtn.innerHTML = "🖊 Icône";
-        editBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          handleChangeProfileAvatar(profile);
-        });
 
         const deleteBtn = document.createElement("button");
         deleteBtn.type = "button";
@@ -1136,14 +1152,13 @@
           handleDeleteProfile(profile);
         });
 
-        actions.appendChild(editBtn);
         actions.appendChild(deleteBtn);
 
         tile.appendChild(avatar);
         tile.appendChild(name);
         tile.appendChild(actions);
 
-        // Clic sur le tile = choisir le profil
+        // Clic sur la carte = choisir le profil
         tile.addEventListener("click", () => {
           setCurrentProfile(profile.id);
         });
@@ -1151,6 +1166,7 @@
         container.appendChild(tile);
       });
     }
+
 
     // --- Comparateur (tableau, filtres, panier) ---
 
@@ -1508,6 +1524,31 @@
     ensureInitialProfiles();
     renderProfilesList();
     // On laisse l'écran de profils visible au démarrage
+        // Navigation vers les sections (actions rapides)
+    const btnGoAdd = document.getElementById("btn-go-add");
+    const btnGoTable = document.getElementById("btn-go-table");
+    const btnGoMap = document.getElementById("btn-go-map");
+    const btnGoCart = document.getElementById("btn-go-cart");
+
+    function smoothScrollTo(selector) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    if (btnGoAdd) {
+      btnGoAdd.addEventListener("click", () => smoothScrollTo("#add-form"));
+    }
+    if (btnGoTable) {
+      btnGoTable.addEventListener("click", () => smoothScrollTo("#price-table"));
+    }
+    if (btnGoMap) {
+      btnGoMap.addEventListener("click", () => smoothScrollTo(".map-section"));
+    }
+    if (btnGoCart) {
+      btnGoCart.addEventListener("click", () => smoothScrollTo(".cart-section"));
+    }
+
   </script>
 
   </script>

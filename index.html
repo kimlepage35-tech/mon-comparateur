@@ -4,6 +4,15 @@
   <meta charset="UTF-8" />
   <title>Mon comparateur de courses</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Styles Leaflet (carte) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
   <style>
     :root {
       --bg-body: #0f172a;
@@ -416,6 +425,23 @@
       text-align: center;
     }
 
+    /* --- Carte des magasins --- */
+    .map-section {
+      margin-top: 1rem;
+      padding: 0.8rem 0.7rem 0.7rem;
+      border-radius: 0.9rem;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      font-size: 0.85rem;
+    }
+
+    #map {
+      margin-top: 0.5rem;
+      height: 320px;
+      border-radius: 0.75rem;
+      border: 1px solid #e5e7eb;
+    }
+
     @media (max-width: 640px) {
       body {
         padding: 0.9rem 0.5rem;
@@ -453,7 +479,9 @@
       <div class="card-header">
         <div>
           <h1>Mes produits du moment</h1>
-          <p class="subtitle">Recherche, filtre par magasin, tri par prix, filtre prix/kg et sélection dans le panier.</p>
+          <p class="subtitle">
+            Recherche, filtre par magasin, tri par prix, filtre prix/kg, carte et sélection dans le panier.
+          </p>
           <div class="tag-row">
             <span class="tag">Courses</span>
             <span class="tag">Comparateur perso</span>
@@ -521,6 +549,19 @@
         </table>
       </section>
 
+      <!-- Carte des magasins -->
+      <section class="map-section" aria-label="Carte des magasins">
+        <div class="cart-header-row">
+          <div>
+            <div class="cart-title">Carte des magasins</div>
+            <p class="cart-hint">
+              Visualise où se trouvent les lieux d'achat et clique sur un point pour voir les horaires.
+            </p>
+          </div>
+        </div>
+        <div id="map"></div>
+      </section>
+
       <section class="cart-section" aria-label="Liste de courses">
         <div class="cart-header-row">
           <div>
@@ -583,8 +624,15 @@
     </main>
   </div>
 
+  <!-- Script Leaflet -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
   <script>
-    // Données avec prix et prix/kg (à adapter plus tard avec tes vrais chiffres)
+    // Produits (exemples)
     const data = [
       {
         produit: "Pâtes 500 g",
@@ -612,6 +660,59 @@
           { magasin: "Super U Dagort", prix: 2.10, prixKg: 2.10 },
           { magasin: "Chez Clochet", prix: 2.45, prixKg: 2.45 }
         ]
+      }
+    ];
+
+    // Magasins pour la carte (coordonnées approximatives à Saint-Pierre)
+    const shops = [
+      {
+        name: "Chez Julien",
+        lat: 46.7815,
+        lng: -56.1760,
+        address: "3 rue Louis Pasteur, 97500 Saint-Pierre, Saint-Pierre-et-Miquelon",
+        hours: "Lun–Ven : 08h–20h<br>Sam : 09h–12h30 & 15h–19h30<br>Dim : fermé"
+      },
+      {
+        name: "Chez Clochet",
+        lat: 46.7810,
+        lng: -56.1780,
+        address: "QRPG+7R9, 97500 Saint-Pierre, Saint-Pierre-et-Miquelon",
+        hours: "Lun–Sam : 08h30–12h & 13h30–21h<br>Dim : 09h30–12h & 17h30–21h"
+      },
+      {
+        name: "Poissonnerie Paturel",
+        lat: 46.7820,
+        lng: -56.1795,
+        address: "QRMJ+C9V, 97500 Saint-Pierre, Saint-Pierre-et-Miquelon",
+        hours: "Mar–Ven : 09h30–12h15 & 16h–18h30<br>Sam : 10h–12h<br>Lun : 16h–18h30<br>Dim : fermé"
+      },
+      {
+        name: "Chez L'tournel",
+        lat: 46.7805,
+        lng: -56.1745,
+        address: "30 rue Ange Gautier, 97500 Saint-Pierre, Saint-Pierre-et-Miquelon",
+        hours: "Lun–Jeu : 07h30–22h30<br>Ven : 07h30–23h<br>Sam : 08h–23h<br>Dim : 09h–22h"
+      },
+      {
+        name: "Claude Gautier",
+        lat: 46.7808,
+        lng: -56.1755,
+        address: "11 rue Abbé Pierre Gervain, 97500 Saint-Pierre, Saint-Pierre-et-Miquelon",
+        hours: "Lun–Ven : 08h–12h30 & 13h30–19h<br>Sam : 08h–12h30 & 14h–18h<br>Dim : fermé"
+      },
+      {
+        name: "Super U Dagort",
+        lat: 46.7795,
+        lng: -56.1815,
+        address: "QRG9+6JR, Bd Louis Héron de Villefosse, 97500 Saint-Pierre, Saint-Pierre-et-Miquelon",
+        hours: "Lun–Sam : 09h–12h & 14h–19h<br>Dim : fermé"
+      },
+      {
+        name: "Chez Bernie",
+        lat: 46.7812,
+        lng: -56.1772,
+        address: "QRGC+J6H, Av Commandant Roget Birot, 97500 Saint-Pierre, Saint-Pierre-et-Miquelon",
+        hours: "Lun–Ven : 08h30–12h15 & 14h30–20h<br>Sam : 09h–12h15 & 17h–20h<br>Dim : fermé"
       }
     ];
 
@@ -788,6 +889,29 @@
       updateCartSummary();
     }
 
+    // Carte Leaflet
+    let map;
+
+    function initMap() {
+      // Centre approximatif de Saint-Pierre
+      map = L.map("map").setView([46.781, -56.177], 14);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap"
+      }).addTo(map);
+
+      shops.forEach((shop) => {
+        const marker = L.marker([shop.lat, shop.lng]).addTo(map);
+        const popupContent = `
+          <strong>${shop.name}</strong><br>
+          ${shop.address}<br>
+          <small>${shop.hours}</small>
+        `;
+        marker.bindPopup(popupContent);
+      });
+    }
+
     const searchInput = document.getElementById("search-input");
     const storeFilter = document.getElementById("store-filter");
     const unitFilter = document.getElementById("unit-filter");
@@ -845,7 +969,7 @@
           {
             magasin: store,
             prix: price,
-            prixKg: price // par défaut = prix, tu pourras ajuster à la main plus tard
+            prixKg: price // par défaut = même valeur, à ajuster à la main si besoin
           }
         ]
       };
@@ -895,7 +1019,9 @@
       }
     });
 
+    // Premier affichage
     renderTable();
+    initMap();
   </script>
 </body>
 </html>

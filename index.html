@@ -497,7 +497,7 @@
     }
 
     .profile-tile {
-      width: 110px;
+      width: 140px;
       border-radius: 0.9rem;
       background: #0b1120;
       border: 1px solid rgba(148, 163, 184, 0.6);
@@ -505,9 +505,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.3rem;
       cursor: pointer;
       transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, border-color 0.1s;
+      position: relative;
     }
 
     .profile-tile:hover {
@@ -517,16 +518,24 @@
     }
 
     .profile-avatar {
-      width: 52px;
-      height: 52px;
-      border-radius: 1rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 1.1rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 700;
       color: #0f172a;
       box-shadow: 0 0 0 1px rgba(15,23,42,0.65);
+      overflow: hidden;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .avatar-1 { background: #a5b4fc; }
@@ -542,6 +551,42 @@
       text-overflow: ellipsis;
       overflow: hidden;
       max-width: 100%;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 0.25rem;
+      margin-top: 0.2rem;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .profile-action-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 0.15rem 0.4rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.15rem;
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .profile-action-btn:hover {
+      background: rgba(34, 197, 94, 0.18);
+      border-color: var(--primary);
+    }
+
+    .profile-action-btn.delete {
+      border-color: rgba(248, 113, 113, 0.8);
+      color: #fecaca;
+    }
+
+    .profile-action-btn.delete:hover {
+      background: rgba(248, 113, 113, 0.22);
     }
 
     .profiles-add-form {
@@ -817,7 +862,7 @@
   ></script>
 
   <script>
-    const LOCAL_STORAGE_KEY = "comparateurProfilsV1";
+    const LOCAL_STORAGE_KEY = "comparateurProfilsV2";
 
     // Données par défaut (modèle pour chaque nouveau profil)
     const defaultData = [
@@ -940,12 +985,14 @@
             id: "profil-1",
             name: "Lepage",
             avatarIndex: 1,
+            avatarImage: null,
             products: cloneDefaultData()
           },
           {
             id: "profil-2",
             name: "Coloc",
             avatarIndex: 2,
+            avatarImage: null,
             products: cloneDefaultData()
           }
         ];
@@ -962,13 +1009,12 @@
       if (!profile) return;
 
       currentProfileId = id;
-      data = profile.products;
+      data = profile.products || [];
       const chip = document.getElementById("profile-chip");
       if (chip) {
         chip.textContent = "Profil : " + profile.name;
       }
 
-      // Masquer l'écran de profils
       const screen = document.getElementById("profiles-screen");
       if (screen) {
         screen.style.display = "none";
@@ -985,28 +1031,117 @@
       saveProfiles();
     }
 
+    function handleChangeProfileAvatar(profile) {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+
+      input.addEventListener("change", () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          profile.avatarImage = e.target.result;
+          saveProfiles();
+          renderProfilesList();
+        };
+        reader.readAsDataURL(file);
+      });
+
+      input.click();
+    }
+
+    function handleDeleteProfile(profile) {
+      if (profiles.length <= 1) {
+        alert("Tu ne peux pas supprimer le dernier profil.");
+        return;
+      }
+
+      const confirmDelete = confirm(
+        `Supprimer le profil "${profile.name}" ?\n\nSes produits et sa liste de courses seront effacés de ce navigateur.`
+      );
+
+      if (!confirmDelete) return;
+
+      profiles = profiles.filter(p => p.id !== profile.id);
+      saveProfiles();
+
+      if (currentProfileId === profile.id) {
+        currentProfileId = null;
+        data = [];
+        const screen = document.getElementById("profiles-screen");
+        if (screen) {
+          screen.style.display = "flex";
+        }
+        const chip = document.getElementById("profile-chip");
+        if (chip) {
+          chip.textContent = "Profil : …";
+        }
+        const tbody = document.querySelector("#price-table tbody");
+        if (tbody) tbody.innerHTML = "";
+        const cartContent = document.getElementById("cart-content");
+        if (cartContent) cartContent.textContent = "Aucun article sélectionné.";
+      }
+
+      renderProfilesList();
+    }
+
     function renderProfilesList() {
       const container = document.getElementById("profiles-list");
       if (!container) return;
       container.innerHTML = "";
 
       profiles.forEach((profile, index) => {
-        const tile = document.createElement("button");
-        tile.type = "button";
+        const tile = document.createElement("div");
         tile.className = "profile-tile";
 
         const avatar = document.createElement("div");
         const avatarClass = "avatar-" + ((profile.avatarIndex || ((index % 5) + 1)));
         avatar.className = "profile-avatar " + avatarClass;
-        avatar.textContent = profile.name.trim()[0]?.toUpperCase() || "?";
+
+        if (profile.avatarImage) {
+          const img = document.createElement("img");
+          img.src = profile.avatarImage;
+          img.alt = profile.name;
+          avatar.appendChild(img);
+        } else {
+          avatar.textContent = profile.name.trim()[0]?.toUpperCase() || "?";
+        }
 
         const name = document.createElement("div");
         name.className = "profile-name";
         name.textContent = profile.name;
 
+        const actions = document.createElement("div");
+        actions.className = "profile-actions";
+
+        const editBtn = document.createElement("button");
+        editBtn.type = "button";
+        editBtn.className = "profile-action-btn";
+        editBtn.innerHTML = "🖊 Icône";
+        editBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          handleChangeProfileAvatar(profile);
+        });
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "profile-action-btn delete";
+        deleteBtn.innerHTML = "🗑 Supprimer";
+        deleteBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          handleDeleteProfile(profile);
+        });
+
+        actions.appendChild(editBtn);
+        actions.appendChild(deleteBtn);
+
         tile.appendChild(avatar);
         tile.appendChild(name);
+        tile.appendChild(actions);
 
+        // Clic sur le tile = choisir le profil
         tile.addEventListener("click", () => {
           setCurrentProfile(profile.id);
         });
@@ -1123,7 +1258,6 @@
         filteredPrices.forEach((prixMagasin, index) => {
           const tr = document.createElement("tr");
 
-          // Colonne sélection (panier)
           const tdSelect = document.createElement("td");
           const checkbox = document.createElement("input");
           checkbox.type = "checkbox";
@@ -1135,7 +1269,6 @@
           tdSelect.appendChild(checkbox);
           tr.appendChild(tdSelect);
 
-          // Colonne photo
           const tdPhoto = document.createElement("td");
           if (index === 0 && item.image) {
             const img = document.createElement("img");
@@ -1146,7 +1279,6 @@
           }
           tr.appendChild(tdPhoto);
 
-          // Colonne produit
           const tdProduit = document.createElement("td");
           if (index === 0) {
             tdProduit.textContent = item.produit;
@@ -1155,16 +1287,13 @@
             tdProduit.textContent = "";
           }
 
-          // Colonne magasin
           const tdMagasin = document.createElement("td");
           tdMagasin.textContent = prixMagasin.magasin;
 
-          // Colonne prix
           const tdPrix = document.createElement("td");
           tdPrix.textContent = prixMagasin.prix.toFixed(2).replace(".", ",");
           tdPrix.classList.add("price-cell");
 
-          // Colonne prix/kg
           const tdPrixKg = document.createElement("td");
           if (typeof prixMagasin.prixKg === "number") {
             tdPrixKg.textContent = prixMagasin.prixKg.toFixed(2).replace(".", ",");
@@ -1173,7 +1302,6 @@
           }
           tdPrixKg.classList.add("price-cell");
 
-          // Badge "Moins cher"
           if (prixMagasin.prix === minPriceForItem) {
             tr.classList.add("best-price");
             const badge = document.createElement("span");
@@ -1357,6 +1485,7 @@
           id: newId,
           name,
           avatarIndex,
+          avatarImage: null,
           products: cloneDefaultData()
         };
         profiles.push(newProfile);
@@ -1366,7 +1495,6 @@
       });
     }
 
-    // Changer de profil via le chip
     const profileChip = document.getElementById("profile-chip");
     if (profileChip && profilesScreen) {
       profileChip.addEventListener("click", () => {

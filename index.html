@@ -41,6 +41,136 @@
       padding: 1.5rem 1rem;
     }
 
+    /* --- Écran d'authentification --- */
+    .auth-screen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, #020617 0, #000 55%, #000 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      z-index: 50;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 380px;
+      background: #0b1220;
+      border-radius: 1.25rem;
+      padding: 1.4rem 1.3rem 1.3rem;
+      box-shadow:
+        0 24px 60px rgba(15, 23, 42, 0.6),
+        0 0 0 1px rgba(148, 163, 184, 0.4);
+      color: #e5e7eb;
+    }
+
+    .auth-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .auth-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 25% 25%, #bbf7d0 0, #22c55e 45%, #14532d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #022c22;
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.35);
+      font-size: 0.9rem;
+    }
+
+    .auth-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .auth-sub {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      margin-bottom: 0.9rem;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .auth-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .auth-group label {
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    .auth-group input {
+      padding: 0.4rem 0.6rem;
+      border-radius: 0.6rem;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: #020617;
+      color: #f9fafb;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .auth-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
+    }
+
+    .auth-hint {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      line-height: 1.4;
+    }
+
+    .auth-button {
+      margin-top: 0.4rem;
+      width: 100%;
+      padding: 0.55rem 0.9rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--primary);
+      color: #022c22;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      box-shadow: 0 18px 40px rgba(34, 197, 94, 0.35);
+    }
+
+    .auth-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .auth-warning {
+      margin-top: 0.6rem;
+      font-size: 0.72rem;
+      color: #f97316;
+      display: flex;
+      gap: 0.3rem;
+      align-items: flex-start;
+    }
+
+    .auth-warning-icon {
+      font-size: 0.85rem;
+      line-height: 1;
+    }
+
     .app-shell {
       width: 100%;
       max-width: 960px;
@@ -463,7 +593,46 @@
   </style>
 </head>
 <body>
-  <div class="app-shell">
+  <!-- Écran de connexion / création de compte local -->
+  <div class="auth-screen" id="auth-screen">
+    <div class="auth-card">
+      <div class="auth-title-row">
+        <div class="auth-logo">€</div>
+        <div>
+          <div class="auth-title">Connexion au comparateur</div>
+        </div>
+      </div>
+      <p class="auth-sub">
+        Chaque e-mail a ses propres produits, stockés localement dans ce navigateur.
+      </p>
+
+      <form id="auth-form" class="auth-form">
+        <div class="auth-group">
+          <label for="auth-email">E-mail</label>
+          <input id="auth-email" type="email" placeholder="ex : moi@example.com" required />
+        </div>
+        <div class="auth-group">
+          <label for="auth-password">Mot de passe</label>
+          <input id="auth-password" type="password" placeholder="••••••••" required />
+        </div>
+        <p class="auth-hint">
+          Si l’adresse n’existe pas encore, un compte local sera créé avec ces identifiants.
+        </p>
+        <button type="submit" class="auth-button">
+          <span>Se connecter / créer un compte</span>
+        </button>
+        <div class="auth-warning">
+          <span class="auth-warning-icon">⚠️</span>
+          <span>
+            Comptes locaux uniquement sur cet appareil. Ce n’est pas sécurisé comme un vrai site
+            (à ne pas utiliser pour des mots de passe importants).
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="app-shell" id="app-shell" style="display:none;">
     <header class="app-header">
       <div class="brand">
         <div class="logo-circle">€</div>
@@ -472,7 +641,7 @@
           <div class="brand-sub">Ton outil perso pour payer moins cher</div>
         </div>
       </div>
-      <div class="chip">Prototype local · 100% privé</div>
+      <div class="chip" id="user-chip">Connecté en local</div>
     </header>
 
     <main class="app-card">
@@ -632,8 +801,10 @@
   ></script>
 
   <script>
-    // Produits (exemples)
-    const data = [
+    const LOCAL_STORAGE_KEY = "comparateurUsersV1";
+
+    // Données par défaut (modèle pour chaque nouveau compte)
+    const defaultData = [
       {
         produit: "Pâtes 500 g",
         image: "https://via.placeholder.com/60?text=Pates",
@@ -716,11 +887,46 @@
       }
     ];
 
+    let data = []; // sera rempli après connexion
+    let currentUserEmail = null;
     let currentSearch = "";
     let currentStore = "all";
     let currentSort = "none";
     let currentUnitMax = "all";
     let lastCartItems = [];
+    let map;
+
+    function cloneDefaultData() {
+      return defaultData.map(item => ({
+        ...item,
+        prix: item.prix.map(p => ({ ...p }))
+      }));
+    }
+
+    function loadUsers() {
+      try {
+        const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (!raw) return {};
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === "object" ? parsed : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(users));
+    }
+
+    function saveCurrentUserData() {
+      if (!currentUserEmail) return;
+      const users = loadUsers();
+      const emailKey = currentUserEmail.toLowerCase();
+      const user = users[emailKey] || {};
+      user.products = data;
+      users[emailKey] = user;
+      saveUsers(users);
+    }
 
     function updateCartSummary() {
       const checked = document.querySelectorAll(".row-select:checked");
@@ -868,7 +1074,7 @@
           }
           tdPrixKg.classList.add("price-cell");
 
-          // Badge "Moins cher" sur la ligne la moins chère (selon filtres)
+          // Badge "Moins cher"
           if (prixMagasin.prix === minPriceForItem) {
             tr.classList.add("best-price");
             const badge = document.createElement("span");
@@ -890,10 +1096,8 @@
     }
 
     // Carte Leaflet
-    let map;
-
     function initMap() {
-      // Centre approximatif de Saint-Pierre
+      if (map) return; // éviter de recréer si déjà fait
       map = L.map("map").setView([46.781, -56.177], 14);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -912,30 +1116,39 @@
       });
     }
 
+    // Gestion filtres & formulaire
     const searchInput = document.getElementById("search-input");
     const storeFilter = document.getElementById("store-filter");
     const unitFilter = document.getElementById("unit-filter");
     const sortSelect = document.getElementById("sort-select");
 
-    searchInput.addEventListener("input", (event) => {
-      currentSearch = event.target.value;
-      renderTable();
-    });
+    if (searchInput) {
+      searchInput.addEventListener("input", (event) => {
+        currentSearch = event.target.value;
+        renderTable();
+      });
+    }
 
-    storeFilter.addEventListener("change", (event) => {
-      currentStore = event.target.value;
-      renderTable();
-    });
+    if (storeFilter) {
+      storeFilter.addEventListener("change", (event) => {
+        currentStore = event.target.value;
+        renderTable();
+      });
+    }
 
-    unitFilter.addEventListener("change", (event) => {
-      currentUnitMax = event.target.value;
-      renderTable();
-    });
+    if (unitFilter) {
+      unitFilter.addEventListener("change", (event) => {
+        currentUnitMax = event.target.value;
+        renderTable();
+      });
+    }
 
-    sortSelect.addEventListener("change", (event) => {
-      currentSort = event.target.value;
-      renderTable();
-    });
+    if (sortSelect) {
+      sortSelect.addEventListener("change", (event) => {
+        currentSort = event.target.value;
+        renderTable();
+      });
+    }
 
     const addForm = document.getElementById("add-form");
     const addName = document.getElementById("add-name");
@@ -943,85 +1156,145 @@
     const addPrice = document.getElementById("add-price");
     const addImage = document.getElementById("add-image");
 
-    addForm.addEventListener("submit", (event) => {
-      event.preventDefault();
+    if (addForm) {
+      addForm.addEventListener("submit", (event) => {
+        event.preventDefault();
 
-      const name = addName.value.trim();
-      const store = addStore.value.trim();
-      const priceText = addPrice.value.trim().replace(",", ".");
-      const price = parseFloat(priceText);
-      const file = addImage.files[0];
+        const name = addName.value.trim();
+        const store = addStore.value.trim();
+        const priceText = addPrice.value.trim().replace(",", ".");
+        const price = parseFloat(priceText);
+        const file = addImage.files[0];
 
-      if (!name || !store || isNaN(price)) {
-        alert("Remplis au moins le nom, le magasin et un prix valide 🙂");
-        return;
-      }
+        if (!name || !store || isNaN(price)) {
+          alert("Remplis au moins le nom, le magasin et un prix valide 🙂");
+          return;
+        }
 
-      let imageUrl = "";
-      if (file) {
-        imageUrl = URL.createObjectURL(file);
-      }
+        let imageUrl = "";
+        if (file) {
+          imageUrl = URL.createObjectURL(file);
+        }
 
-      const newProduct = {
-        produit: name,
-        image: imageUrl,
-        prix: [
-          {
-            magasin: store,
-            prix: price,
-            prixKg: price // par défaut = même valeur, à ajuster à la main si besoin
-          }
-        ]
-      };
+        const newProduct = {
+          produit: name,
+          image: imageUrl,
+          prix: [
+            {
+              magasin: store,
+              prix: price,
+              prixKg: price // par défaut
+            }
+          ]
+        };
 
-      data.push(newProduct);
-      addForm.reset();
-      renderTable();
-    });
+        data.push(newProduct);
+        saveCurrentUserData();
+        addForm.reset();
+        renderTable();
+      });
+    }
 
     const copyCartButton = document.getElementById("copy-cart");
-    copyCartButton.addEventListener("click", () => {
-      if (!lastCartItems.length) {
-        alert("Aucun article sélectionné dans le panier.");
-        return;
-      }
-
-      const lines = [];
-      let currentMagasin = null;
-
-      lastCartItems.forEach((item) => {
-        if (item.magasin !== currentMagasin) {
-          currentMagasin = item.magasin;
-          lines.push(currentMagasin.toUpperCase());
+    if (copyCartButton) {
+      copyCartButton.addEventListener("click", () => {
+        if (!lastCartItems.length) {
+          alert("Aucun article sélectionné dans le panier.");
+          return;
         }
-        lines.push(
-          "- " +
-            item.produit +
-            " : " +
-            item.prix.toFixed(2).replace(".", ",") +
-            " €"
-        );
+
+        const lines = [];
+        let currentMagasin = null;
+
+        lastCartItems.forEach((item) => {
+          if (item.magasin !== currentMagasin) {
+            currentMagasin = item.magasin;
+            lines.push(currentMagasin.toUpperCase());
+          }
+          lines.push(
+            "- " +
+              item.produit +
+              " : " +
+              item.prix.toFixed(2).replace(".", ",") +
+              " €"
+          );
+        });
+
+        const text = lines.join("\n");
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(text)
+            .then(() => {
+              alert("Liste copiée dans le presse-papiers ✅");
+            })
+            .catch(() => {
+              alert("Voici ta liste, tu peux la copier :\n\n" + text);
+            });
+        } else {
+          alert("Voici ta liste, tu peux la copier :\n\n" + text);
+        }
       });
+    }
 
-      const text = lines.join("\n");
+    // Authentification locale
+    const authForm = document.getElementById("auth-form");
+    const authScreen = document.getElementById("auth-screen");
+    const appShell = document.getElementById("app-shell");
+    const userChip = document.getElementById("user-chip");
 
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard
-          .writeText(text)
-          .then(() => {
-            alert("Liste copiée dans le presse-papiers ✅");
-          })
-          .catch(() => {
-            alert("Voici ta liste, tu peux la copier :\n\n" + text);
-          });
-      } else {
-        alert("Voici ta liste, tu peux la copier :\n\n" + text);
-      }
-    });
+    if (authForm) {
+      authForm.addEventListener("submit", (event) => {
+        event.preventDefault();
 
-    // Premier affichage
-    renderTable();
-    initMap();
+        const emailInput = document.getElementById("auth-email");
+        const passwordInput = document.getElementById("auth-password");
+
+        const email = emailInput.value.trim().toLowerCase();
+        const password = passwordInput.value.trim();
+
+        if (!email || !password) {
+          alert("Merci de saisir un e-mail et un mot de passe.");
+          return;
+        }
+
+        const users = loadUsers();
+        const existing = users[email];
+
+        if (existing) {
+          // Connexion
+          if (existing.password !== password) {
+            alert("Mot de passe incorrect pour cet e-mail.");
+            return;
+          }
+          data = (existing.products && Array.isArray(existing.products))
+            ? existing.products
+            : cloneDefaultData();
+        } else {
+          // Création de compte
+          users[email] = {
+            password,
+            products: cloneDefaultData()
+          };
+          saveUsers(users);
+          data = cloneDefaultData();
+        }
+
+        currentUserEmail = email;
+
+        if (userChip) {
+          userChip.textContent = "Connecté : " + email;
+        }
+
+        if (authScreen && appShell) {
+          authScreen.style.display = "none";
+          appShell.style.display = "flex";
+        }
+
+        renderTable();
+        initMap();
+      });
+    }
   </script>
 </body>
 </html>

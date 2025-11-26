@@ -1116,6 +1116,9 @@
       profiles.forEach((profile, index) => {
         const tile = document.createElement("div");
         tile.className = "profile-tile";
+        tile.addEventListener("click", () => {
+          handleSelectProfile(profile);  // utilise ton handler existant
+        });
 
         const avatar = document.createElement("div");
         const avatarClass = "profile-avatar " + "avatar-" + ((profile.avatarIndex || ((index % 5) + 1)));
@@ -1138,6 +1141,16 @@
 
         const actions = document.createElement("div");
         actions.className = "profile-actions";
+
+        const changeAvatarBtn = document.createElement("button");
+        changeAvatarBtn.textContent = "Photo";
+        changeAvtarBtn.className = "profile-change-btn";
+        changeAvatarBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          openAvatarPicker(index);
+        });
+        actions.appendChild(changeAvatarBtn);
+          
 
         const deleteBtn = document.createElement("button");
         deleteBtn.type = "button";

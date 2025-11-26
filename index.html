@@ -453,7 +453,7 @@
       <div class="card-header">
         <div>
           <h1>Mes produits du moment</h1>
-          <p class="subtitle">Recherche, filtre par magasin, tri par prix et sélection dans le panier.</p>
+          <p class="subtitle">Recherche, filtre par magasin, tri par prix, filtre prix/kg et sélection dans le panier.</p>
           <div class="tag-row">
             <span class="tag">Courses</span>
             <span class="tag">Comparateur perso</span>
@@ -483,6 +483,17 @@
         </div>
 
         <div class="control-group">
+          <label for="unit-filter">Prix/kg max</label>
+          <select id="unit-filter">
+            <option value="all">Tous</option>
+            <option value="2">≤ 2 €/kg</option>
+            <option value="3">≤ 3 €/kg</option>
+            <option value="4">≤ 4 €/kg</option>
+            <option value="5">≤ 5 €/kg</option>
+          </select>
+        </div>
+
+        <div class="control-group">
           <label for="sort-select">Trier par prix (min)</label>
           <select id="sort-select">
             <option value="none">Sans tri</option>
@@ -501,6 +512,7 @@
               <th>Produit</th>
               <th>Magasin</th>
               <th>Prix (€)</th>
+              <th>Prix/kg (€)</th>
             </tr>
           </thead>
           <tbody>
@@ -539,7 +551,7 @@
           </div>
           <div class="add-form-group">
             <label for="add-store">Magasin</label>
-            <input id="add-store" type="text" placeholder="ex : Supermarché A" />
+            <input id="add-store" type="text" placeholder="ex : Super U Dagort" />
           </div>
           <div class="add-form-group">
             <label for="add-price">Prix (€)</label>
@@ -572,32 +584,33 @@
   </div>
 
   <script>
+    // Données avec prix et prix/kg (à adapter plus tard avec tes vrais chiffres)
     const data = [
       {
         produit: "Pâtes 500 g",
         image: "https://via.placeholder.com/60?text=Pates",
         prix: [
-          { magasin: "Supermarché A", prix: 1.20 },
-          { magasin: "Supermarché B", prix: 1.05 },
-          { magasin: "Supermarché C", prix: 1.35 }
+          { magasin: "Chez Clochet", prix: 1.20, prixKg: 2.40 },
+          { magasin: "Super U Dagort", prix: 1.05, prixKg: 2.10 },
+          { magasin: "Chez Julien", prix: 1.35, prixKg: 2.70 }
         ]
       },
       {
         produit: "Lait 1 L",
         image: "https://via.placeholder.com/60?text=Lait",
         prix: [
-          { magasin: "Supermarché A", prix: 1.10 },
-          { magasin: "Supermarché B", prix: 1.09 },
-          { magasin: "Supermarché C", prix: 1.25 }
+          { magasin: "Claude Gautier", prix: 1.10, prixKg: 1.10 },
+          { magasin: "Chez L'tournel", prix: 1.09, prixKg: 1.09 },
+          { magasin: "Chez Bernie", prix: 1.25, prixKg: 1.25 }
         ]
       },
       {
         produit: "Pommes (1 kg)",
         image: "https://via.placeholder.com/60?text=Pommes",
         prix: [
-          { magasin: "Supermarché A", prix: 2.30 },
-          { magasin: "Supermarché B", prix: 2.10 },
-          { magasin: "Supermarché C", prix: 2.45 }
+          { magasin: "Poissonnerie Paturel", prix: 2.30, prixKg: 2.30 },
+          { magasin: "Super U Dagort", prix: 2.10, prixKg: 2.10 },
+          { magasin: "Chez Clochet", prix: 2.45, prixKg: 2.45 }
         ]
       }
     ];
@@ -605,6 +618,7 @@
     let currentSearch = "";
     let currentStore = "all";
     let currentSort = "none";
+    let currentUnitMax = "all";
     let lastCartItems = [];
 
     function updateCartSummary() {
@@ -652,14 +666,27 @@
       });
     }
 
+    function getFilteredPricesForItem(item) {
+      return item.prix.filter((p) => {
+        const storeOk = currentStore === "all" || p.magasin === currentStore;
+        const unitOk =
+          currentUnitMax === "all" ||
+          (typeof p.prixKg === "number" && p.prixKg <= parseFloat(currentUnitMax));
+        return storeOk && unitOk;
+      });
+    }
+
+    function getMinFilteredPrice(item) {
+      const filtered = getFilteredPricesForItem(item);
+      if (!filtered.length) return null;
+      return Math.min(...filtered.map((p) => p.prix));
+    }
+
     function renderTable() {
       const tbody = document.querySelector("#price-table tbody");
       tbody.innerHTML = "";
 
-      let items = data.map((item) => {
-        const minPrice = Math.min(...item.prix.map((p) => p.prix));
-        return { ...item, minPrice };
-      });
+      let items = data.slice();
 
       const searchValue = currentSearch.trim().toLowerCase();
       if (searchValue !== "") {
@@ -668,19 +695,24 @@
         );
       }
 
-      if (currentSort === "asc") {
-        items.sort((a, b) => a.minPrice - b.minPrice);
-      } else if (currentSort === "desc") {
-        items.sort((a, b) => b.minPrice - a.minPrice);
+      if (currentSort === "asc" || currentSort === "desc") {
+        items.sort((a, b) => {
+          const minA = getMinFilteredPrice(a);
+          const minB = getMinFilteredPrice(b);
+
+          if (minA === null && minB === null) return 0;
+          if (minA === null) return 1;
+          if (minB === null) return -1;
+
+          return currentSort === "asc" ? minA - minB : minB - minA;
+        });
       }
 
       items.forEach((item) => {
-        const filteredPrices = item.prix.filter((p) => {
-          if (currentStore === "all") return true;
-          return p.magasin === currentStore;
-        });
+        const filteredPrices = getFilteredPricesForItem(item);
+        if (!filteredPrices.length) return;
 
-        if (filteredPrices.length === 0) return;
+        const minPriceForItem = Math.min(...filteredPrices.map((p) => p.prix));
 
         filteredPrices.forEach((prixMagasin, index) => {
           const tr = document.createElement("tr");
@@ -726,9 +758,18 @@
           tdPrix.textContent = prixMagasin.prix.toFixed(2).replace(".", ",");
           tdPrix.classList.add("price-cell");
 
-          if (prixMagasin.prix === item.minPrice) {
-            tr.classList.add("best-price");
+          // Colonne prix/kg
+          const tdPrixKg = document.createElement("td");
+          if (typeof prixMagasin.prixKg === "number") {
+            tdPrixKg.textContent = prixMagasin.prixKg.toFixed(2).replace(".", ",");
+          } else {
+            tdPrixKg.textContent = "-";
+          }
+          tdPrixKg.classList.add("price-cell");
 
+          // Badge "Moins cher" sur la ligne la moins chère (selon filtres)
+          if (prixMagasin.prix === minPriceForItem) {
+            tr.classList.add("best-price");
             const badge = document.createElement("span");
             badge.classList.add("badge-best");
             badge.textContent = "Moins cher";
@@ -738,17 +779,18 @@
           tr.appendChild(tdProduit);
           tr.appendChild(tdMagasin);
           tr.appendChild(tdPrix);
+          tr.appendChild(tdPrixKg);
 
           tbody.appendChild(tr);
         });
       });
 
-      // Quand on rerend le tableau, on vide le panier visuel (checkboxes réinitialisées)
       updateCartSummary();
     }
 
     const searchInput = document.getElementById("search-input");
     const storeFilter = document.getElementById("store-filter");
+    const unitFilter = document.getElementById("unit-filter");
     const sortSelect = document.getElementById("sort-select");
 
     searchInput.addEventListener("input", (event) => {
@@ -758,6 +800,11 @@
 
     storeFilter.addEventListener("change", (event) => {
       currentStore = event.target.value;
+      renderTable();
+    });
+
+    unitFilter.addEventListener("change", (event) => {
+      currentUnitMax = event.target.value;
       renderTable();
     });
 
@@ -795,7 +842,11 @@
         produit: name,
         image: imageUrl,
         prix: [
-          { magasin: store, prix: price }
+          {
+            magasin: store,
+            prix: price,
+            prixKg: price // par défaut = prix, tu pourras ajuster à la main plus tard
+          }
         ]
       };
 

@@ -1130,11 +1130,7 @@
           avatar.textContent = profile.name.trim()[0]?.toUpperCase() || "?";
         }
 
-        // Clic sur la photo = changer l'icône
-        avatar.addEventListener("click", (e) => {
-          e.stopPropagation();
-          handleChangeProfileAvatar(profile);
-        });
+        
 
         const name = document.createElement("div");
         name.className = "profile-name";

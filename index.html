@@ -41,136 +41,6 @@
       padding: 1.5rem 1rem;
     }
 
-    /* --- Écran d'authentification --- */
-    .auth-screen {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at top, #020617 0, #000 55%, #000 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem 1rem;
-      z-index: 50;
-    }
-
-    .auth-card {
-      width: 100%;
-      max-width: 380px;
-      background: #0b1220;
-      border-radius: 1.25rem;
-      padding: 1.4rem 1.3rem 1.3rem;
-      box-shadow:
-        0 24px 60px rgba(15, 23, 42, 0.6),
-        0 0 0 1px rgba(148, 163, 184, 0.4);
-      color: #e5e7eb;
-    }
-
-    .auth-title-row {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .auth-logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 25% 25%, #bbf7d0 0, #22c55e 45%, #14532d 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: #022c22;
-      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.35);
-      font-size: 0.9rem;
-    }
-
-    .auth-title {
-      font-size: 1.05rem;
-      font-weight: 600;
-    }
-
-    .auth-sub {
-      font-size: 0.8rem;
-      color: #9ca3af;
-      margin-bottom: 0.9rem;
-    }
-
-    .auth-form {
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-    }
-
-    .auth-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .auth-group label {
-      font-size: 0.8rem;
-      color: #e5e7eb;
-    }
-
-    .auth-group input {
-      padding: 0.4rem 0.6rem;
-      border-radius: 0.6rem;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: #020617;
-      color: #f9fafb;
-      font-size: 0.85rem;
-      outline: none;
-    }
-
-    .auth-group input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
-    }
-
-    .auth-hint {
-      font-size: 0.75rem;
-      color: #9ca3af;
-      line-height: 1.4;
-    }
-
-    .auth-button {
-      margin-top: 0.4rem;
-      width: 100%;
-      padding: 0.55rem 0.9rem;
-      border-radius: 999px;
-      border: none;
-      background: var(--primary);
-      color: #022c22;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      box-shadow: 0 18px 40px rgba(34, 197, 94, 0.35);
-    }
-
-    .auth-button:hover {
-      background: var(--primary-dark);
-    }
-
-    .auth-warning {
-      margin-top: 0.6rem;
-      font-size: 0.72rem;
-      color: #f97316;
-      display: flex;
-      gap: 0.3rem;
-      align-items: flex-start;
-    }
-
-    .auth-warning-icon {
-      font-size: 0.85rem;
-      line-height: 1;
-    }
-
     .app-shell {
       width: 100%;
       max-width: 960px;
@@ -229,6 +99,17 @@
       font-size: 0.7rem;
       color: #e5e7eb;
       white-space: nowrap;
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .chip-profile {
+      cursor: pointer;
+      transition: background 0.15s, transform 0.08s;
+    }
+
+    .chip-profile:hover {
+      background: rgba(34, 197, 94, 0.15);
+      transform: translateY(-1px);
     }
 
     .app-card {
@@ -572,6 +453,147 @@
       border: 1px solid #e5e7eb;
     }
 
+    /* --- Écran de profils (style Netflix) --- */
+    .profiles-screen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, #020617 0, #000 55%, #000 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      z-index: 50;
+    }
+
+    .profiles-card {
+      width: 100%;
+      max-width: 520px;
+      background: #020617;
+      border-radius: 1.5rem;
+      padding: 1.5rem 1.4rem 1.4rem;
+      box-shadow:
+        0 30px 70px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(148, 163, 184, 0.4);
+      color: #e5e7eb;
+    }
+
+    .profiles-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .profiles-sub {
+      font-size: 0.82rem;
+      color: #9ca3af;
+      margin-bottom: 1rem;
+    }
+
+    .profiles-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .profile-tile {
+      width: 110px;
+      border-radius: 0.9rem;
+      background: #0b1120;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 0.5rem 0.4rem 0.6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, border-color 0.1s;
+    }
+
+    .profile-tile:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 35px rgba(15, 23, 42, 0.9);
+      border-color: var(--primary);
+    }
+
+    .profile-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      box-shadow: 0 0 0 1px rgba(15,23,42,0.65);
+    }
+
+    .avatar-1 { background: #a5b4fc; }
+    .avatar-2 { background: #6ee7b7; }
+    .avatar-3 { background: #fca5a5; }
+    .avatar-4 { background: #fde68a; }
+    .avatar-5 { background: #f9a8d4; }
+
+    .profile-name {
+      font-size: 0.8rem;
+      text-align: center;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 100%;
+    }
+
+    .profiles-add-form {
+      margin-top: 0.4rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed rgba(148, 163, 184, 0.6);
+    }
+
+    .profiles-add-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-top: 0.4rem;
+    }
+
+    .profiles-add-row input {
+      flex: 1;
+      padding: 0.4rem 0.6rem;
+      border-radius: 0.7rem;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    .profiles-add-row input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4);
+    }
+
+    .profiles-add-row button {
+      padding: 0.42rem 0.8rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--primary);
+      color: #022c22;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .profiles-add-row button:hover {
+      background: var(--primary-dark);
+    }
+
+    .profiles-hint {
+      font-size: 0.74rem;
+      color: #9ca3af;
+      margin-top: 0.4rem;
+    }
+
     @media (max-width: 640px) {
       body {
         padding: 0.9rem 0.5rem;
@@ -589,50 +611,44 @@
       .app-header {
         border-radius: 0.9rem;
       }
+
+      .profile-tile {
+        width: 45%;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Écran de connexion / création de compte local -->
-  <div class="auth-screen" id="auth-screen">
-    <div class="auth-card">
-      <div class="auth-title-row">
-        <div class="auth-logo">€</div>
-        <div>
-          <div class="auth-title">Connexion au comparateur</div>
+  <!-- Écran de sélection de profil -->
+  <div class="profiles-screen" id="profiles-screen">
+    <div class="profiles-card">
+      <div class="profiles-title">Choisis ton profil</div>
+      <div class="profiles-sub">
+        Chaque profil a son propre comparateur (produits, prix, liste de courses), stocké dans ce navigateur.
+      </div>
+
+      <div class="profiles-list" id="profiles-list">
+        <!-- Profils générés en JavaScript -->
+      </div>
+
+      <div class="profiles-add-form">
+        <div class="profiles-add-row">
+          <input
+            id="profiles-add-name"
+            type="text"
+            placeholder="Nom du profil (ex : Moi, Coloc, Parents...)"
+          />
+          <button type="button" id="profiles-add-button">+ Ajouter</button>
+        </div>
+        <div class="profiles-hint">
+          Tu peux créer un profil par personne (toi, amis, coloc...).<br />
+          Pour changer de profil plus tard, clique sur le badge dans l'en-tête.
         </div>
       </div>
-      <p class="auth-sub">
-        Chaque e-mail a ses propres produits, stockés localement dans ce navigateur.
-      </p>
-
-      <form id="auth-form" class="auth-form">
-        <div class="auth-group">
-          <label for="auth-email">E-mail</label>
-          <input id="auth-email" type="email" placeholder="ex : moi@example.com" required />
-        </div>
-        <div class="auth-group">
-          <label for="auth-password">Mot de passe</label>
-          <input id="auth-password" type="password" placeholder="••••••••" required />
-        </div>
-        <p class="auth-hint">
-          Si l’adresse n’existe pas encore, un compte local sera créé avec ces identifiants.
-        </p>
-        <button type="submit" class="auth-button">
-          <span>Se connecter / créer un compte</span>
-        </button>
-        <div class="auth-warning">
-          <span class="auth-warning-icon">⚠️</span>
-          <span>
-            Comptes locaux uniquement sur cet appareil. Ce n’est pas sécurisé comme un vrai site
-            (à ne pas utiliser pour des mots de passe importants).
-          </span>
-        </div>
-      </form>
     </div>
   </div>
 
-  <div class="app-shell" id="app-shell" style="display:none;">
+  <div class="app-shell" id="app-shell">
     <header class="app-header">
       <div class="brand">
         <div class="logo-circle">€</div>
@@ -641,7 +657,7 @@
           <div class="brand-sub">Ton outil perso pour payer moins cher</div>
         </div>
       </div>
-      <div class="chip" id="user-chip">Connecté en local</div>
+      <div class="chip chip-profile" id="profile-chip">Profil : …</div>
     </header>
 
     <main class="app-card">
@@ -787,8 +803,8 @@
       </form>
 
       <div class="footer-info">
-        Prototype local – Ta liste de courses est créée à partir des cases cochées.  
-        Tu peux la copier pour la garder ailleurs (notes, WhatsApp, etc.).
+        Prototype local – Chaque profil a ses propres données.  
+        Ta liste de courses est créée à partir des cases cochées. Tu peux la copier pour la garder ailleurs.
       </div>
     </main>
   </div>
@@ -801,9 +817,9 @@
   ></script>
 
   <script>
-    const LOCAL_STORAGE_KEY = "comparateurUsersV1";
+    const LOCAL_STORAGE_KEY = "comparateurProfilsV1";
 
-    // Données par défaut (modèle pour chaque nouveau compte)
+    // Données par défaut (modèle pour chaque nouveau profil)
     const defaultData = [
       {
         produit: "Pâtes 500 g",
@@ -887,14 +903,11 @@
       }
     ];
 
-    let data = []; // sera rempli après connexion
-    let currentUserEmail = null;
-    let currentSearch = "";
-    let currentStore = "all";
-    let currentSort = "none";
-    let currentUnitMax = "all";
-    let lastCartItems = [];
-    let map;
+    // --- Gestion des profils ---
+
+    let profiles = [];
+    let currentProfileId = null;
+    let data = []; // produits du profil courant
 
     function cloneDefaultData() {
       return defaultData.map(item => ({
@@ -903,30 +916,113 @@
       }));
     }
 
-    function loadUsers() {
+    function loadProfiles() {
       try {
         const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (!raw) return {};
+        if (!raw) return [];
         const parsed = JSON.parse(raw);
-        return parsed && typeof parsed === "object" ? parsed : {};
+        if (!Array.isArray(parsed)) return [];
+        return parsed;
       } catch (e) {
-        return {};
+        return [];
       }
     }
 
-    function saveUsers(users) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(users));
+    function saveProfiles() {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(profiles));
     }
 
-    function saveCurrentUserData() {
-      if (!currentUserEmail) return;
-      const users = loadUsers();
-      const emailKey = currentUserEmail.toLowerCase();
-      const user = users[emailKey] || {};
-      user.products = data;
-      users[emailKey] = user;
-      saveUsers(users);
+    function ensureInitialProfiles() {
+      profiles = loadProfiles();
+      if (!profiles.length) {
+        profiles = [
+          {
+            id: "profil-1",
+            name: "Lepage",
+            avatarIndex: 1,
+            products: cloneDefaultData()
+          },
+          {
+            id: "profil-2",
+            name: "Coloc",
+            avatarIndex: 2,
+            products: cloneDefaultData()
+          }
+        ];
+        saveProfiles();
+      }
     }
+
+    function getCurrentProfile() {
+      return profiles.find(p => p.id === currentProfileId) || null;
+    }
+
+    function setCurrentProfile(id) {
+      const profile = profiles.find(p => p.id === id);
+      if (!profile) return;
+
+      currentProfileId = id;
+      data = profile.products;
+      const chip = document.getElementById("profile-chip");
+      if (chip) {
+        chip.textContent = "Profil : " + profile.name;
+      }
+
+      // Masquer l'écran de profils
+      const screen = document.getElementById("profiles-screen");
+      if (screen) {
+        screen.style.display = "none";
+      }
+
+      renderTable();
+      initMap();
+    }
+
+    function saveCurrentProfileData() {
+      const profile = getCurrentProfile();
+      if (!profile) return;
+      profile.products = data;
+      saveProfiles();
+    }
+
+    function renderProfilesList() {
+      const container = document.getElementById("profiles-list");
+      if (!container) return;
+      container.innerHTML = "";
+
+      profiles.forEach((profile, index) => {
+        const tile = document.createElement("button");
+        tile.type = "button";
+        tile.className = "profile-tile";
+
+        const avatar = document.createElement("div");
+        const avatarClass = "avatar-" + ((profile.avatarIndex || ((index % 5) + 1)));
+        avatar.className = "profile-avatar " + avatarClass;
+        avatar.textContent = profile.name.trim()[0]?.toUpperCase() || "?";
+
+        const name = document.createElement("div");
+        name.className = "profile-name";
+        name.textContent = profile.name;
+
+        tile.appendChild(avatar);
+        tile.appendChild(name);
+
+        tile.addEventListener("click", () => {
+          setCurrentProfile(profile.id);
+        });
+
+        container.appendChild(tile);
+      });
+    }
+
+    // --- Comparateur (tableau, filtres, panier) ---
+
+    let currentSearch = "";
+    let currentStore = "all";
+    let currentSort = "none";
+    let currentUnitMax = "all";
+    let lastCartItems = [];
+    let map;
 
     function updateCartSummary() {
       const checked = document.querySelectorAll(".row-select:checked");
@@ -991,7 +1087,10 @@
 
     function renderTable() {
       const tbody = document.querySelector("#price-table tbody");
+      if (!tbody) return;
       tbody.innerHTML = "";
+
+      if (!Array.isArray(data)) data = [];
 
       let items = data.slice();
 
@@ -1097,7 +1196,10 @@
 
     // Carte Leaflet
     function initMap() {
-      if (map) return; // éviter de recréer si déjà fait
+      if (map) return;
+      const mapElement = document.getElementById("map");
+      if (!mapElement) return;
+
       map = L.map("map").setView([46.781, -56.177], 14);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -1189,7 +1291,7 @@
         };
 
         data.push(newProduct);
-        saveCurrentUserData();
+        saveCurrentProfileData();
         addForm.reset();
         renderTable();
       });
@@ -1237,64 +1339,45 @@
       });
     }
 
-    // Authentification locale
-    const authForm = document.getElementById("auth-form");
-    const authScreen = document.getElementById("auth-screen");
-    const appShell = document.getElementById("app-shell");
-    const userChip = document.getElementById("user-chip");
+    // Gestion de l'écran de profils
+    const profilesScreen = document.getElementById("profiles-screen");
+    const profilesAddInput = document.getElementById("profiles-add-name");
+    const profilesAddButton = document.getElementById("profiles-add-button");
 
-    if (authForm) {
-      authForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-
-        const emailInput = document.getElementById("auth-email");
-        const passwordInput = document.getElementById("auth-password");
-
-        const email = emailInput.value.trim().toLowerCase();
-        const password = passwordInput.value.trim();
-
-        if (!email || !password) {
-          alert("Merci de saisir un e-mail et un mot de passe.");
+    if (profilesAddButton && profilesAddInput) {
+      profilesAddButton.addEventListener("click", () => {
+        const name = profilesAddInput.value.trim();
+        if (!name) {
+          alert("Merci de donner un nom au profil 🙂");
           return;
         }
-
-        const users = loadUsers();
-        const existing = users[email];
-
-        if (existing) {
-          // Connexion
-          if (existing.password !== password) {
-            alert("Mot de passe incorrect pour cet e-mail.");
-            return;
-          }
-          data = (existing.products && Array.isArray(existing.products))
-            ? existing.products
-            : cloneDefaultData();
-        } else {
-          // Création de compte
-          users[email] = {
-            password,
-            products: cloneDefaultData()
-          };
-          saveUsers(users);
-          data = cloneDefaultData();
-        }
-
-        currentUserEmail = email;
-
-        if (userChip) {
-          userChip.textContent = "Connecté : " + email;
-        }
-
-        if (authScreen && appShell) {
-          authScreen.style.display = "none";
-          appShell.style.display = "flex";
-        }
-
-        renderTable();
-        initMap();
+        const newId = "profil-" + Date.now();
+        const avatarIndex = (profiles.length % 5) + 1;
+        const newProfile = {
+          id: newId,
+          name,
+          avatarIndex,
+          products: cloneDefaultData()
+        };
+        profiles.push(newProfile);
+        saveProfiles();
+        profilesAddInput.value = "";
+        renderProfilesList();
       });
     }
+
+    // Changer de profil via le chip
+    const profileChip = document.getElementById("profile-chip");
+    if (profileChip && profilesScreen) {
+      profileChip.addEventListener("click", () => {
+        profilesScreen.style.display = "flex";
+      });
+    }
+
+    // Initialisation
+    ensureInitialProfiles();
+    renderProfilesList();
+    // On laisse l'écran de profils visible au démarrage
   </script>
 </body>
 </html>
